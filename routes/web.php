@@ -1,11 +1,18 @@
 <?php
 
+use App\Http\Controllers\BasicController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+/* Route::view('welcome', 'welcome'); */
+// Route::get('/', [BasicController::class, 'index']);
+// Route::get('/about-us', [BasicController::class, 'aboutUs']);
+Route::controller(BasicController::class)->group(function () {
+    Route::get('/', 'index');
+    Route::get('/about-us', 'aboutUs');
 });
-Route::view('welcome', 'welcome');
 
 Route::prefix('product')->group(function () {
     Route::get('/', function () {
@@ -30,13 +37,14 @@ Route::get('user/{name?}', function ($name = 'no user') {
 });
 
 Route::get('products', function () {
-    $name = "Product 1";
+    $name = 'Product 1';
     $price = 700;
+
     /* return view('products.index')->with('name', $name)->with('price', $price); */
     /* return view('products.index', compact('name', 'price')); */
     return view('products.index', ['name' => $name, 'price' => $price]);
 });
 
 Route::fallback(function () {
-    return "Are you lost?";
+    return 'Are you lost?';
 });
