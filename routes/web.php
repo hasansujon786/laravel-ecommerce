@@ -1,50 +1,18 @@
 <?php
 
-use App\Http\Controllers\BasicController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-/* Route::view('welcome', 'welcome'); */
-// Route::get('/', [BasicController::class, 'index']);
-// Route::get('/about-us', [BasicController::class, 'aboutUs']);
-Route::controller(BasicController::class)->group(function () {
-    Route::get('/', 'index');
-    Route::get('/about-us', 'aboutUs');
+Route::get('/', function () {
+    return view('welcome');
 });
 
-Route::prefix('product')->group(function () {
-    Route::get('/', function () {
-        return 'product home';
-    });
-
-    Route::get('view', function () {
-        return 'View';
-    });
-
-    Route::get('detail', function () {
-        return 'Detail';
-    });
-});
-
-Route::get('vendor/{id}/{name}', function ($id, $name) {
-    return "Vendor id is {$id} {$name}";
-});
-
-Route::get('user/{name?}', function ($name = 'no user') {
-    return "User is {$name}";
-});
-
-Route::get('products', function () {
-    $name = 'Product 1';
-    $price = 700;
-
-    /* return view('products.index')->with('name', $name)->with('price', $price); */
-    /* return view('products.index', compact('name', 'price')); */
-    return view('products.index', ['name' => $name, 'price' => $price]);
-});
-
-Route::fallback(function () {
-    return 'Are you lost?';
+Route::controller(CategoryController::class)->group(function () {
+    Route::get('categories', 'index');
+    /* Route::get('categories/add', 'add'); */
+    /* Route::get('categories/{id}', 'show'); */
+    /* Route::get('categories/{id}/edit', 'update'); */
+    /* Route::get('categories/{id}/del', 'delete'); */
+    Route::get('categories/store', 'store');
+    Route::get('categories/all', 'getAll');
 });

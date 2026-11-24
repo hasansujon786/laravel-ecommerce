@@ -1,0 +1,73 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Category;
+use Illuminate\Support\Facades\DB;
+
+class CategoryController extends Controller
+{
+    public function index()
+    {
+        return Category::all();
+    }
+
+    public function add()
+    {
+        $item = new Category;
+        $item->name = 'First Category';
+        $item->slug = 'first_slug';
+        $item->image = 'this is a image';
+        $item->save();
+    }
+
+    public function show($id)
+    {
+        $item = Category::findOrFail($id);
+
+        return $item;
+    }
+
+    public function update($id)
+    {
+        $item = Category::findOrFail($id);
+
+        $item->name = 'First Category Updated';
+        $item->update();
+    }
+
+    public function delete($id)
+    {
+        $item = Category::findOrFail($id);
+        $item->delete();
+    }
+
+    // Store data using query builder
+    public function store()
+    {
+        /* DB::table('categories')->insert([ */
+        /*     'name' => 'demo name', */
+        /*     'slug' => 'demo slug', */
+        /*     'image' => 'demo image', */
+        /* ]); */
+
+        $id = DB::table('categories')->insertGetId([
+            'name' => 'demo name',
+            'slug' => 'demo slug',
+            'image' => 'demo image',
+        ]);
+
+        return $id;
+    }
+
+    // Get data using query builder
+    public function getAll()
+    {
+        $categories = DB::table('categories')->select([
+            'id',
+            'name',
+            'slug',
+        ])->where('id', 2)->first();
+        return $categories;
+    }
+}

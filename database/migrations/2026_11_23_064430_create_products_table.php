@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('brand_id')->constrained('brands')->cascadeOnDelete();
-            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->string('name');
+            $table->string('slug');
             $table->decimal('regular_price', 10, 2);
             $table->decimal('sale_price', 10, 2);
             $table->string('sku')->nullable();
@@ -23,8 +22,12 @@ return new class extends Migration
             $table->enum('stock_status', ['instock', 'outofstock']);
             $table->string('featured')->default('no');
             $table->string('short_description')->nullable();
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->string('status')->default('draft');
+
+            $table->foreignId('brand_id')->constrained('brands')->cascadeOnDelete();
+            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
+            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
 
             $table->timestamps();
         });
