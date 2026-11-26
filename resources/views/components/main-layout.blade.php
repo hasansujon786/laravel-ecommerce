@@ -17,7 +17,7 @@
 
 <body class="min-h-screen bg-[#080d19] text-slate-200 antialiased font-sans flex overflow-x-hidden">
     <!-- Sidebar -->
-    @include('layouts.sidebar')
+                    @include('layouts.sidebar')
 
     <!-- Main Content Area -->
     <div class="flex-1 flex flex-col min-w-0 min-h-screen">
@@ -26,7 +26,7 @@
 
         <!-- Page Content -->
         <main class="flex-1 px-6 py-6 lg:px-8">
-            @yield('content')
+            {{$slot}}
         </main>
 
         <!-- Footer -->

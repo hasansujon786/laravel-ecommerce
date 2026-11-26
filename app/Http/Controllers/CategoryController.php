@@ -14,11 +14,17 @@ class CategoryController extends Controller
 
     public function add()
     {
-        $item = new Category;
-        $item->name = 'First Category';
-        $item->slug = 'first_slug';
-        $item->image = 'this is a image';
-        $item->save();
+        /* $item = new Category; */
+        /* $item->name = 'First Category'; */
+        /* $item->slug = 'first_slug'; */
+        /* $item->image = 'this is a image'; */
+        /* $item->save(); */
+
+        $category = Category::create([
+            'name' => 'First Category 1',
+            'slug' => 'first_slug',
+            'image' => 'this is a image',
+        ]);
     }
 
     public function show($id)
@@ -68,6 +74,8 @@ class CategoryController extends Controller
             'name',
             'slug',
         ])->where('id', 2)->first();
+
+        // leftjoin vs join
         return $categories;
     }
 }
