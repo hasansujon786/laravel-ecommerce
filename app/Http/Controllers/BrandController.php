@@ -4,15 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Brand;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class BrandController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        return view('brands.index', ['brands' => Brand::latest()->get()]);
+        $search = $request->string('search', '', true)->trim()->toString();
+
+        $brands = Brand::query()
+            ->search($search)
+            ->latest()
+            ->paginate(10);
+
+
+        return view('brands.index', [
+            'brands' => $brands,
+            'search' => $search,
+        ]);
     }
 
     public function create(): View
@@ -29,6 +41,7 @@ class BrandController extends Controller
         ]);
 
         Brand::create($validated);
+
         return redirect()->route('brands.index')->with('status', 'Brand created.');
     }
 

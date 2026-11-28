@@ -32,6 +32,68 @@ class BrandControllerTest extends TestCase
             ->assertSee('&lt;script&gt;', false);
     }
 
+    public function test_index_filters_brands_by_name(): void
+    {
+        Brand::factory()->create(['name' => 'Acme Supply', 'slug' => 'acme-supply']);
+        Brand::factory()->create(['name' => 'Globex Supply', 'slug' => 'globex-supply']);
+
+        $response = $this->get(route('brands.index', ['search' => '  Acme  ']));
+
+        $response->assertOk()
+            ->assertSee('Acme Supply')
+            ->assertDontSee('Globex Supply');
+    }
+
+    public function test_index_filters_brands_by_slug(): void
+    {
+        Brand::factory()->create(['name' => 'Acme Supply', 'slug' => 'acme-supply']);
+        Brand::factory()->create(['name' => 'Globex Supply', 'slug' => 'globex-supply']);
+
+        $response = $this->get(route('brands.index', ['search' => 'globex']));
+
+        $response->assertOk()
+            ->assertSee('Globex Supply')
+            ->assertDontSee('Acme Supply');
+    }
+
+    public function test_index_renders_search_input_with_current_search_term(): void
+    {
+        $response = $this->get(route('brands.index', ['search' => 'Acme']));
+
+        $response->assertOk()
+            ->assertSee('name="search"', false)
+            ->assertSee('value="Acme"', false);
+    }
+
+    public function test_index_shows_empty_state_when_search_has_no_matches(): void
+    {
+        Brand::factory()->create(['name' => 'Acme Supply', 'slug' => 'acme-supply']);
+
+        $response = $this->get(route('brands.index', ['search' => 'missing-brand']));
+
+        $response->assertOk()
+            ->assertSee('No brands found.')
+            ->assertDontSee('Acme Supply');
+    }
+
+    public function test_index_escapes_search_term(): void
+    {
+        $response = $this->get(route('brands.index', ['search' => '"><script>alert(1)</script>']));
+
+        $response->assertOk()
+            ->assertDontSee('<script>', false)
+            ->assertSee('&lt;script&gt;', false);
+    }
+
+    public function test_index_ignores_invalid_search_input(): void
+    {
+        Brand::factory()->create(['name' => 'Acme Supply', 'slug' => 'acme-supply']);
+
+        $response = $this->get(route('brands.index', ['search' => ['Acme']]));
+
+        $response->assertOk()->assertSee('Acme Supply');
+    }
+
     public function test_create_renders_brand_form(): void
     {
         $response = $this->get(route('brands.create'));
