@@ -12,9 +12,7 @@ class BrandController extends Controller
 {
     public function index(): View
     {
-        return view('brands.index', [
-            'brands' => Brand::latest()->get(),
-        ]);
+        return view('brands.index', ['brands' => Brand::latest()->get()]);
     }
 
     public function create(): View
@@ -31,7 +29,6 @@ class BrandController extends Controller
         ]);
 
         Brand::create($validated);
-
         return redirect()->route('brands.index')->with('status', 'Brand created.');
     }
 
